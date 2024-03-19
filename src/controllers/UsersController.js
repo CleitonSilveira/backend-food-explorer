@@ -26,7 +26,7 @@ class UsersController {
     const { name, email, password, old_password } = request.body;
     const user_id = request.user.id;
 
-    const user = await knex("users")
+    const user = await knex("users").first()
       .select()
       .where("id", user_id); 
 
@@ -34,7 +34,7 @@ class UsersController {
       throw new AppError("Usuário não encontrado");
     }
 
-    const userWithUpdatedEmail = await knex("users")
+    const userWithUpdatedEmail = await knex("users").first()
       .select()
       .where({ email });
     
@@ -64,10 +64,10 @@ class UsersController {
     await knex("users")
       .where("id", user_id)
       .update({
-        nome: user.name,
+        name: user.name,
         email: user.email,
         password: user.password,
-        updated_at: DATETIME('now'),
+        updated_at: knex.fn.now(),
       });
    
     return response.json();
